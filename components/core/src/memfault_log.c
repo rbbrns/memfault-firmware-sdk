@@ -255,14 +255,21 @@ void memfault_log_save(eMemfaultPlatformLogLevel level, const char *fmt, ...) {
   if (!prv_should_log(level)) {
     return;
   }
+  va_list args;
+  va_start(args, fmt);
+  memfault_log_save_args(level, fmt, args);
+  va_end(args);
+}
+
+void memfault_log_save_args(eMemfaultPlatformLogLevel level, const char *fmt, va_list args) {
+  if (!prv_should_log(level)) {
+    return;
+  }
 
   char log_buf[MEMFAULT_LOG_MAX_LINE_SAVE_LEN + 1];
 
-  va_list args;
-  va_start(args, fmt);
   const size_t available_space = sizeof(log_buf);
   const int rv = vsnprintf(log_buf, available_space, fmt, args);
-  va_end(args);
 
   if (rv <= 0) {
     return;

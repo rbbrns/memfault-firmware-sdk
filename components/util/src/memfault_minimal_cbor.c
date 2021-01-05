@@ -9,6 +9,7 @@
 
 #include <inttypes.h>
 #include <string.h>
+#include <util.h>
 
 // https://tools.ietf.org/html/rfc7049#section-2.1
 typedef enum CborMajorType {
@@ -158,7 +159,7 @@ bool memfault_cbor_encode_byte_string(sMemfaultCborEncoder *encoder, const void 
 }
 
 bool memfault_cbor_encode_string(sMemfaultCborEncoder *encoder, const char *str) {
-  const size_t str_len = strlen(str);
+  const size_t str_len = strnlen(str, 1024);
   return (prv_encode_unsigned_integer(encoder, kCborMajorType_TextString,  str_len) &&
           prv_add_to_result_buffer(encoder, str, str_len));
 }

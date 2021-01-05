@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdarg.h>
 
 #include "memfault/core/compiler.h"
 #include "memfault/core/platform/debug_log.h" // For eMemfaultPlatformLogLevel
@@ -79,6 +80,9 @@ void memfault_log_set_min_save_level(eMemfaultPlatformLogLevel min_log_level);
 //! }
 void memfault_log_save_preformatted(eMemfaultPlatformLogLevel level, const char *log,
                                     size_t log_len);
+
+void memfault_log_save_args(eMemfaultPlatformLogLevel level, const char *fmt,
+			    va_list args);
 
 //! Maximum length a log record can occupy
 #define MEMFAULT_LOG_MAX_LINE_SAVE_LEN 128

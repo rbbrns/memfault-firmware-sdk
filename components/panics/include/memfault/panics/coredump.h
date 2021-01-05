@@ -23,8 +23,10 @@ typedef struct MemfaultCoredumpSaveInfo {
   const void *regs;
   size_t regs_size;
   eMemfaultRebootReason trace_reason;
-  const sMfltCoredumpRegion *regions;
-  size_t num_regions;
+  const sMfltCoredumpRegion *static_regions;
+  size_t num_static_regions;
+  const sMfltCoredumpRegion *dynamic_regions;
+  size_t num_dynamic_regions;
 } sMemfaultCoredumpSaveInfo;
 
 //! Invoked by assert handler to capture coredump.

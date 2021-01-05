@@ -12,6 +12,8 @@
 
 #include "memfault/panics/fault_handling.h"
 
+#include "memfault/core/debug_log.h"
+
 #include "memfault/core/platform/core.h"
 #include "memfault/core/reboot_tracking.h"
 #include "memfault/panics/arch/arm/cortex_m.h"
@@ -57,7 +59,10 @@ size_t memfault_coredump_storage_compute_size_required(void) {
     .trace_reason = save_info.trace_reason,
     .exception_reg_state = NULL,
   };
-  save_info.regions = memfault_platform_coredump_get_regions(&info, &save_info.num_regions);
+
+  MEMFAULT_LOG_INFO("memfault_coredump_storage_compute_size_required");
+  save_info.dynamic_regions = memfault_platform_coredump_get_dynamic_regions(&info, &save_info.num_dynamic_regions);
+  save_info.static_regions = memfault_platform_coredump_get_static_regions(&info, &save_info.num_static_regions);
 
   return memfault_coredump_get_save_size(&save_info);
 }
@@ -103,9 +108,10 @@ static uint32_t prv_read_msp_reg(void) {
 #endif
 
 MEMFAULT_WEAK
-void memfault_platform_fault_handler(const sMfltRegState *regs, eMemfaultRebootReason reason) {
+  void memfault_platform_fault_handler(const sMfltRegState *regs, eMemfaultRebootReason reason) {
 }
 
+MEMFAULT_USED
 void memfault_fault_handler(const sMfltRegState *regs, eMemfaultRebootReason reason) {
   memfault_platform_fault_handler(regs, reason);
 
@@ -163,7 +169,8 @@ void memfault_fault_handler(const sMfltRegState *regs, eMemfaultRebootReason rea
     .trace_reason = save_info.trace_reason,
     .exception_reg_state = regs,
   };
-  save_info.regions = memfault_platform_coredump_get_regions(&info, &save_info.num_regions);
+  save_info.static_regions = memfault_platform_coredump_get_static_regions(&info, &save_info.num_static_regions);
+  save_info.dynamic_regions = memfault_platform_coredump_get_dynamic_regions(&info, &save_info.num_dynamic_regions);
 
   const bool coredump_saved = memfault_coredump_save(&save_info);
   if (coredump_saved) {
