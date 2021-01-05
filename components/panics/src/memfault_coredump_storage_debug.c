@@ -244,7 +244,7 @@ static void prv_hexdump(const char *prefix, const uint8_t *buf, size_t buf_len) 
   #define MAX_BUF_LEN (sizeof(s_read_buf) * 2 + 1)
   char hex_buffer[MAX_BUF_LEN];
   for (uint32_t j = 0; j < buf_len; ++j) {
-    sprintf(&hex_buffer[j * 2], "%02x", buf[j]);
+    snprintf(&hex_buffer[j * 2], 2, "%02x", buf[j]);
   }
 
   MEMFAULT_LOG_INFO("%s: %s", prefix, hex_buffer);

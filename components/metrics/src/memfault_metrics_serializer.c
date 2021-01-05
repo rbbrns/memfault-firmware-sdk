@@ -10,7 +10,7 @@
 
 #include "memfault/metrics/serializer.h"
 
-#include <stdio.h>
+
 #include <stddef.h>
 
 #include "memfault/core/compiler.h"

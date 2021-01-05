@@ -13,6 +13,7 @@
 //! process
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <stddef.h>
 
 #include "memfault/core/event_storage.h"

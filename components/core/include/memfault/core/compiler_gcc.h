@@ -17,7 +17,7 @@ extern "C" {
 
 #define MEMFAULT_PACKED __attribute__((packed))
 #define MEMFAULT_PACKED_STRUCT struct MEMFAULT_PACKED
-#define MEMFAULT_NORETURN __attribute__((noreturn))
+#define MEMFAULT_NORETURN _Noreturn
 #define MEMFAULT_NAKED_FUNC __attribute__((naked))
 #define MEMFAULT_UNREACHABLE __builtin_unreachable()
 #if defined(__clang__)

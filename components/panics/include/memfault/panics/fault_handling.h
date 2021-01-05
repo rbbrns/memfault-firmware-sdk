@@ -9,7 +9,7 @@
 //! Handlers for faults & exceptions that are included in the Memfault SDK.
 
 #include <inttypes.h>
-
+#include <stdint.h>
 #include "memfault/core/compiler.h"
 
 #ifdef __cplusplus
@@ -17,6 +17,12 @@ extern "C" {
 #endif
 
 #if MEMFAULT_COMPILER_ARM
+
+#define MEMFAULT_EXC_HANDLER_HARD_FAULT hard_fault_handler
+#define MEMFAULT_EXC_HANDLER_MEMORY_MANAGEMENT mpu_fault_handler
+#define MEMFAULT_EXC_HANDLER_BUS_FAULT bus_fault_handler
+#define MEMFAULT_EXC_HANDLER_USAGE_FAULT usage_fault_handler
+#define MEMFAULT_EXC_HANDLER_NMI nmi_handler
 
 // By default, exception handlers use CMSIS naming conventions. By default, the CMSIS library
 // provides a weak implementation for each handler that is implemented as an infinite loop. By

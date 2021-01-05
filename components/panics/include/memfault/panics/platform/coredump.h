@@ -16,6 +16,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "memfault/core/reboot_reason_types.h"
 
@@ -73,6 +74,10 @@ typedef struct CoredumpCrashInfo {
 const sMfltCoredumpRegion *memfault_platform_coredump_get_regions(
     const sCoredumpCrashInfo *crash_info, size_t *num_regions);
 
+const sMfltCoredumpRegion *memfault_platform_coredump_get_static_regions(
+    const sCoredumpCrashInfo *crash_info, size_t *num_regions);
+const sMfltCoredumpRegion *memfault_platform_coredump_get_dynamic_regions(
+    const sCoredumpCrashInfo *crash_info, size_t *num_regions);
 typedef struct MfltCoredumpStorageInfo {
   //! The size of the coredump storage region (must be greater than the space needed to capture all
   //! the regions returned from @ref memfault_platform_coredump_get_regions)

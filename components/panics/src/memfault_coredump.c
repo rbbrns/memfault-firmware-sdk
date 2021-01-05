@@ -11,6 +11,8 @@
 
 #include <string.h>
 #include <stdbool.h>
+#include <util.h>
+#include <inttypes.h>
 
 #include "memfault/core/build_info.h"
 #include "memfault/core/compiler.h"
@@ -216,28 +218,28 @@ static bool prv_write_device_info_blocks(sMfltCoredumpWriteCtx *ctx) {
 
   if (info.device_serial) {
     if (!prv_write_non_memory_block(kMfltCoredumpRegionType_DeviceSerial,
-                                    info.device_serial, strlen(info.device_serial), ctx)) {
+                                    info.device_serial, strnlen(info.device_serial, 256), ctx)) {
       return false;
     }
   }
 
   if (info.software_version) {
     if (!prv_write_non_memory_block(kMfltCoredumpRegionType_SoftwareVersion,
-                                    info.software_version, strlen(info.software_version), ctx)) {
+                                    info.software_version, strnlen(info.software_version, 256), ctx)) {
       return false;
     }
   }
 
   if (info.software_type) {
     if (!prv_write_non_memory_block(kMfltCoredumpRegionType_SoftwareType,
-                                       info.software_type, strlen(info.software_type), ctx)) {
+                                       info.software_type, strnlen(info.software_type, 256), ctx)) {
       return false;
     }
   }
 
   if (info.hardware_version) {
     if (!prv_write_non_memory_block(kMfltCoredumpRegionType_HardwareVersion,
-                                       info.hardware_version, strlen(info.hardware_version), ctx)) {
+                                       info.hardware_version, strnlen(info.hardware_version, 256), ctx)) {
       return false;
     }
   }
@@ -344,14 +346,6 @@ static bool prv_write_coredump_sections(const sMemfaultCoredumpSaveInfo *save_in
   sMfltCoredumpStorageInfo info = { 0 };
   sMfltCoredumpHeader hdr = { 0 };
 
-  // are there some regions for us to save?
-  size_t num_regions = save_info->num_regions;
-  const sMfltCoredumpRegion *regions = save_info->regions;
-  if ((regions == NULL) || (num_regions == 0)) {
-    // sanity check that we got something valid from the caller
-    return false;
-  }
-
   if (!compute_size_only) {
     if (!memfault_platform_coredump_save_begin()) {
       return false;
@@ -414,7 +408,9 @@ static bool prv_write_coredump_sections(const sMemfaultCoredumpSaveInfo *save_in
   const bool write_completed =
       prv_write_regions(&write_ctx, arch_regions, num_arch_regions) &&
       prv_write_regions(&write_ctx, sdk_regions, num_sdk_regions) &&
-      prv_write_regions(&write_ctx, regions, num_regions);
+      prv_write_regions(&write_ctx, save_info->static_regions, save_info->num_static_regions) &&
+      prv_write_regions(&write_ctx, save_info->dynamic_regions, save_info->num_dynamic_regions);
+
 
   if (!write_completed && write_ctx.write_error) {
     return false;

@@ -13,6 +13,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "memfault/core/compiler.h"
 
@@ -80,7 +82,7 @@ static void prv_send_prompt(void) {
 
 static const sMemfaultShellCommand *prv_find_command(const char *name) {
   MEMFAULT_SHELL_FOR_EACH_COMMAND(command) {
-    if (strcmp(command->command, name) == 0) {
+    if (strncmp(command->command, name, strlen(name)) == 0) {
       return command;
     }
   }
