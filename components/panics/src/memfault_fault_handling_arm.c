@@ -99,6 +99,7 @@ static uint32_t prv_read_msp_reg(void) {
 #  error "New compiler to add support for!"
 #endif
 
+MEMFAULT_NO_OPT
 void memfault_fault_handler(const sMfltRegState *regs, eMemfaultRebootReason reason) {
   if (s_crash_reason == kMfltRebootReason_Unknown) {
     sMfltRebootTrackingRegInfo info = {
