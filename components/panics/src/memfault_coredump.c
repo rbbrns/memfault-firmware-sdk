@@ -11,6 +11,7 @@
 
 #include <string.h>
 #include <stdbool.h>
+#include <inttypes.h>
 
 #include "memfault/core/build_info.h"
 #include "memfault/core/compiler.h"
@@ -200,28 +201,28 @@ static bool prv_write_device_info_blocks(sMfltCoredumpWriteCtx *ctx) {
 
   if (info.device_serial) {
     if (!prv_write_non_memory_block(kMfltCoredumpRegionType_DeviceSerial,
-                                    info.device_serial, strlen(info.device_serial), ctx)) {
+                                    info.device_serial, strnlen(info.device_serial, 256), ctx)) {
       return false;
     }
   }
 
   if (info.software_version) {
     if (!prv_write_non_memory_block(kMfltCoredumpRegionType_SoftwareVersion,
-                                    info.software_version, strlen(info.software_version), ctx)) {
+                                    info.software_version, strnlen(info.software_version, 256), ctx)) {
       return false;
     }
   }
 
   if (info.software_type) {
     if (!prv_write_non_memory_block(kMfltCoredumpRegionType_SoftwareType,
-                                       info.software_type, strlen(info.software_type), ctx)) {
+                                       info.software_type, strnlen(info.software_type, 256), ctx)) {
       return false;
     }
   }
 
   if (info.hardware_version) {
     if (!prv_write_non_memory_block(kMfltCoredumpRegionType_HardwareVersion,
-                                       info.hardware_version, strlen(info.hardware_version), ctx)) {
+                                       info.hardware_version, strnlen(info.hardware_version, 256), ctx)) {
       return false;
     }
   }

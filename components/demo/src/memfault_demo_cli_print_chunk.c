@@ -55,7 +55,7 @@ static void prv_write_chunk_data(const sMemfaultPrintImpl *print_impl, uint8_t *
                                  size_t packet_size) {
   char hex_buffer[MEMFAULT_CLI_LOG_BUFFER_MAX_SIZE_BYTES];
   for (uint32_t j = 0; j < packet_size; ++j) {
-    sprintf(&hex_buffer[j * 2], "%02x", packet_buffer[j]);
+    snprintf(&hex_buffer[j * 2], 2, "%02x", packet_buffer[j]);
   }
   strncpy(&hex_buffer[packet_size * 2], print_impl->line_end,
           MEMFAULT_CLI_LOG_BUFFER_MAX_SIZE_BYTES - (packet_size * 2));
@@ -108,8 +108,8 @@ static int prv_send_memfault_data_single_packet_chunk(
 
 int memfault_demo_cli_cmd_print_chunk(int argc, char *argv[]) {
   // by default, we will use curl
-  bool use_curl = (argc <= 1) || (strcmp(argv[1], "curl") == 0);
-  bool use_hex = !use_curl && (strcmp(argv[1], "hex") == 0);
+  bool use_curl = (argc <= 1) || (strncmp(argv[1], "curl", sizeof("curl")) == 0);
+  bool use_hex = !use_curl && (strncmp(argv[1], "hex", sizeof("hex")) == 0);
   if (!use_curl && !use_hex) {
     MEMFAULT_LOG_ERROR("Usage: \"print_chunk\" or \"print_chunk <curl|hex> <chunk_size>\"");
     return -1;
